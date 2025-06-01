@@ -1,5 +1,9 @@
 import type { HttpClient } from "../http/HttpClient";
-import type { SendTextMessageRequest, SendMessageResponse } from "./types";
+import type {
+  SendTextMessageRequest,
+  SendMessageResponse,
+  SendAddressMessageRequest,
+} from "./types";
 
 export class WhatsAppService {
   constructor(
@@ -18,6 +22,22 @@ export class WhatsAppService {
       body: message,
     });
 
+    return response.data;
+  }
+
+  /**
+   * Sends an interactive address message to request user's delivery location.
+   * @param message - WhatsApp address message payload
+   */
+  async sendAddressMessage(
+    message: SendAddressMessageRequest,
+  ): Promise<SendMessageResponse> {
+    const response = await this.http.request<SendMessageResponse>({
+      method: "POST",
+      url: `/${this.phoneNumberId}/messages`,
+      headers: { "Content-Type": "application/json" },
+      body: message,
+    });
     return response.data;
   }
 }

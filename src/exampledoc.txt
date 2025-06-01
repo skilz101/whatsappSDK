@@ -1,0 +1,53 @@
+Example useage of the SendMessag function
+
+const sdk = new WhatsAppSDK({
+  baseUrl: 'https://graph.facebook.com/v18.0',
+  authToken: 'EAAJBSUPERSECRET',
+  phoneNumberId: '106540352242922',
+});
+
+sdk.whatsapp.sendMessage({
+  messaging_product: 'whatsapp',
+  recipient_type: 'individual',
+  to: '+16505551234',
+  type: 'text',
+  text: {
+    preview_url: true,
+    body: "Here's the link to our product: https://www.meta.com/quest/quest-3/",
+  },
+}).then(console.log).catch(console.error);
+
+
+=====================================================================================
+
+Example json for AddressMessage
+
+const requestWithValidationError: SendAddressMessageRequest = {
+  messaging_product: "whatsapp",
+  recipient_type: "individual",
+  to: "+919999999999",
+  type: "interactive",
+  interactive: {
+    type: "address_message",
+    body: {
+      text: "Thanks for your order! Tell us what address you’d like this order delivered to.",
+    },
+    action: {
+      name: "address_message",
+      parameters: {
+        country: "IN",
+        values: {
+          name: "CUSTOMER_NAME",
+          phone_number: "+919999999999",
+          in_pin_code: "666666",
+          address: "Some other location",
+          city: "Delhi",
+        },
+        validation_errors: {
+          in_pin_code: "We could not locate this pin code.",
+        },
+      },
+    },
+  },
+};
+

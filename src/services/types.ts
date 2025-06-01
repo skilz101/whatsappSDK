@@ -22,7 +22,8 @@ export type WhatsAppMessageType =
   | "template"
   | "address"
   | "contact"
-  | "document";
+  | "document"
+  | "interactive";
 
 export interface WhatsAppTextPayload {
   preview_url: boolean;
@@ -51,12 +52,67 @@ export interface SendMessageResponse {
     {
       input: string;
       wa_id: string;
-    },
+    }
   ];
   messages: [
     {
       id: string;
-      message_status: string;
-    },
+      message_status?: string;
+    }
   ];
 }
+
+// address message
+
+export type InteractiveMessageType = "address_message";
+
+// values
+export interface AddressMessageValues {
+  name: string;
+  phone_number: string;
+}
+
+// saved address
+
+export interface SavedAddress {
+  id: string;
+  value: {
+    name: string;
+    phone_number: string;
+    in_pin_code?: string;
+    floor_number?: string;
+    building_name?: string;
+    address?: string;
+    landmark_area?: string;
+    city?: string;
+  };
+}
+
+// action parameters
+
+export interface AddressMessageActionParameters {
+  country: string;
+  values?: AddressMessageValues;
+  saved_addresses?: SavedAddress[];
+  validation_errors?: Partial<Record<keyof AddressMessageValues, string>>;
+}
+
+// address message payload
+export interface AddressMessageInteractivePayload {
+  type: "address_message";
+  body: {
+    text: string;
+  };
+  action: {
+    name: "address_message";
+    parameters: AddressMessageActionParameters;
+  };
+}
+
+/**
+ * Send address message request
+ */
+export type SendAddressMessageRequest = Omit<BaseWhatsAppMessage, "type"> & {
+  type: "interactive";
+  interactive: AddressMessageInteractivePayload;
+};
